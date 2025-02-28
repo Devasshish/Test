@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block extra_styles %}
+body {
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 0;
+background-color: #f9f9f9;
+text-align: center;
+}
+header {
+background: #007bff;
+color: white;
+padding: 20px;
+}
+input {
+width: 80%;
+padding: 10px;
+margin-top: 10px;
+border: none;
+border-radius: 5px;
+}
+.faq, .contact {
+margin: 20px auto;
+background: white;
+padding: 20px;
+border-radius: 5px;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.faq h2{
+margin-bottom: 20px;
+}
+.faq-item {
+margin-bottom: 10px;
+}
+.faq-question {
+width: 100%;
+padding: 10px;
+border: none;
+background: #007bff;
+color: white;
+cursor: pointer;
+text-align: left;
+border-radius: 5px;
+}
+.faq-answer {
+display: none;
+padding: 10px;
+background: #e9ecef;
+border-radius: 5px;
+}
+form {
+display: flex;
+flex-direction: column;
+gap: 10px;
+}
+input, textarea {
+width: 100%;
+padding: 10px;
+border: 1px solid #ccc;
+border-radius: 5px;
+}
+button {
+background: #007bff;
+color: white;
+padding: 10px;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+}
+{% endblock %}
+
+{% block content %}
+<header>
+    <h1>Help Center</h1>
+    <input type="text" id="search" placeholder="Search for help..."
+        onkeyup="searchFAQ()">
+</header>
+
+<section class="faq">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item">
+        <button class="faq-question" onclick="toggleFAQ(this)">How to reset my
+            password?</button>
+        <div class="faq-answer">Go to settings, click on 'Change Password', and
+            follow the steps.</div>
+    </div>
+    <div class="faq-item">
+        <button class="faq-question" onclick="toggleFAQ(this)">How to report a
+            fake account?</button>
+        <div class="faq-answer">Go to the profile, click 'Report', and select
+            'Fake Account'.</div>
+    </div>
+    <div class="faq-item">
+        <button class="faq-question" onclick="toggleFAQ(this)">How to delete my
+            account?</button>
+        <div class="faq-answer">Visit account settings and click
+            'Delete Account'. This action is irreversible.</div>
+    </div>
+</section>
+
+<section class="contact">
+    <h2>Contact Support</h2>
+    <form id="support-form">
+        <label for="name">Name:</label>
+        <input type="text" id="name" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" required>
+
+        <label for="message">Message:</label>
+        <textarea id="message" required></textarea>
+
+        <button type="submit">Submit</button>
+    </form>
+</section>
+{% endblock %}
+{% block jscode %}
+function toggleFAQ(button) {
+let answer = button.nextElementSibling;
+if (answer.style.display === "block") {
+answer.style.display = "none";
+} else {
+answer.style.display = "block";
+}
+}
+{% endblock %}
