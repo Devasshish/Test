@@ -1,0 +1,371 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block extra_styles %}
+<!-- General Reset -->
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+  }
+
+  :root {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --primary-light: #c7d2fe;
+    --secondary: #f472b6;
+    --text-dark: #1f2937;
+    --text-light: #6b7280;
+    --text-lighter: #9ca3af;
+    --bg-light: #f9fafb;
+    --bg-white: #ffffff;
+    --border-light: #e5e7eb;
+    --border-focus: #a5b4fc;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  }
+
+  body {
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+  }
+
+  /* Profile Card */
+  .profile-container {
+    background: var(--bg-white);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-md);
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .profile-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: var(--gradient);
+    z-index: 0;
+  }
+
+  .profile-title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    color: white;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Profile Image Section */
+  .profile-image-container {
+    position: relative;
+    margin-bottom: 1.5rem;
+    z-index: 1;
+  }
+
+  .profile-image {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid var(--bg-white);
+    box-shadow: var(--shadow-md);
+  }
+
+  .profile-image-placeholder {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: var(--primary-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 1.5rem;
+    font-weight: bold;
+    border: 5px solid var(--bg-white);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Image Upload Button */
+  .image-upload-label {
+    bottom: 10px;
+    right: 10px;
+    background: var(--primary);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .image-upload-label:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .upload-icon {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+
+  /* Profile Username */
+  .profile-username {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-top: 1rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Form Section */
+  .profile-form {
+    width: 100%;
+    margin-top: 2rem;
+    text-align: left;
+    position: relative;
+    z-index: 1;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  /* Form Elements */
+  .form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 0.95rem;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 1rem 1.5rem; /* Increased padding for a spacious look */
+    border: 2px solid var(--border-light);
+    border-radius: 1rem; /* Round the borders for a modern look */
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    background-color: var(--bg-white);
+    color: var(--text-dark);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: var(--primary); /* Highlight border color on focus */
+    box-shadow: 0 0 0 3px var(--border-focus); /* Subtle glow on focus */
+    background-color: var(--bg-white);
+  }
+
+  .form-control::placeholder {
+    color: var(--text-lighter); /* Lighter color for the placeholder text */
+  }
+
+  .form-control:hover {
+    border-color: var(--primary-dark); /* Slightly darker border on hover */
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1); /* Hover shadow effect */
+  }
+
+  /* Adding icons inside the textboxes */
+  .form-group input[type="text"], .form-group input[type="email"], .form-group input[type="password"] {
+    padding-left: 2.5rem; /* Space for the icon */
+  }
+
+  .form-group .input-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+    font-size: 1.25rem;
+  }
+
+  /* Submit Button */
+  .btn-primary {
+    background: var(--gradient);
+    color: white;
+    padding: 0.875rem 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 1.5rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    opacity: 0.95;
+  }
+
+  .btn-primary:active {
+    transform: translateY(0);
+  }
+
+  /* Form Error */
+  .form-error {
+    color: #e11d48;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    font-weight: 500;
+  }
+
+  /* Form Help Text */
+  .form-help {
+    color: var(--text-light);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: block;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .form-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .profile-container {
+      padding: 2rem 1.5rem;
+    }
+
+    .profile-title {
+      font-size: 1.75rem;
+    }
+
+    .profile-image {
+      width: 140px;
+      height: 140px;
+    }
+
+    .profile-image-placeholder {
+      width: 140px;
+      height: 140px;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="container">
+    <div class="profile-container">
+        <h1 class="profile-title">User Profile</h1>
+        <div class="profile-sidebar">
+            <div class="profile-image-container">
+                <div class="profile-image-wrapper">
+                    {% if user.profile_image %}
+                    <img src="{{ user.profile_image.url }}" alt="Profile Image"
+                        class="profile-image" id="profile-image">
+                    {% else %}
+                    <div class="profile-image-placeholder"
+                        id="profile-image">{{ user.username|first|upper }}</div>
+                    {% endif %}
+                </div>
+                <label for="id_profile_image" class="image-upload-label">
+                    <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    Upload Photo
+                </label>
+                <input type="file" id="id_profile_image" name="profile_image"
+                    accept="image/*" style="display: none;">
+                <h2 class="profile-username">@{{ user.username }}</h2>
+            </div>
+        </div>
+
+        <div class="profile-content">
+            <form method="post" enctype="multipart/form-data"
+                class="profile-form">
+                {% csrf_token %}
+                <div class="form-grid">
+                    {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}"
+                            class="form-label">{{ field.label }}</label>
+                        <input type="{{ field.field.widget.input_type }}"
+                            id="{{ field.id_for_label }}"
+                            name="{{ field.name }}" class="form-control"
+                            placeholder="{{ field.label }}" />
+                        {% if field.help_text %}
+                        <small class="form-help">{{ field.help_text }}</small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                        <div class="form-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn-primary">
+                    <span>Update Profile</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block jscode %}
+document.getElementById('id_profile_image').addEventListener('change',
+function(e) {
+const reader = new FileReader();
+reader.onload = function() {
+const profileImage = document.getElementById('profile-image');
+if (profileImage.tagName === 'IMG') {
+profileImage.src = reader.result;
+} else {
+profileImage.innerHTML = '';
+const newImg = document.createElement('img');
+newImg.src = reader.result;
+newImg.className = 'profile-image';
+profileImage.parentNode.replaceChild(newImg, profileImage);
+}
+}
+if (this.files[0]) {
+reader.readAsDataURL(this.files[0]);
+}
+});
+
+document.querySelector('.profile-form').addEventListener('submit', function(e) {
+const btn = this.querySelector('button[type="submit"]');
+const span = btn.querySelector('span');
+span.innerHTML = 'Updating...';
+btn.disabled = true;
+});
+{% endblock %}

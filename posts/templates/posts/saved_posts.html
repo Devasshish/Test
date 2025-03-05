@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Saved Posts - Social Media{% endblock %}
+{% block extra_styles %}
+.post {
+background-color: #ffffff;
+border: 1px solid #e0e0e0;
+padding: 20px;
+margin-bottom: 30px;
+border-radius: 12px;
+box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+transition: box-shadow 0.3s ease;
+}
+
+.post:hover {
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.post img {
+max-width: 100%;
+border-radius: 8px;
+margin: 15px;
+}
+
+.post-actions {
+display: flex;
+justify-content: space-between;
+align-items: center;
+/* margin-top: 15px; */
+}
+
+.profile-img {
+width: 35px;
+height: 35px;
+border-radius: 50%;
+margin-right: 12px;
+}
+
+.user-info {
+background-color: antiquewhite;
+display: flex;
+flex-direction: row;
+align-items: center;
+margin-bottom: 10px;
+}
+
+.user-info a {
+font-size: 16px;
+font-weight: bold;
+color: #007bff;
+text-decoration: none;
+transition: color 0.2s ease;
+}
+
+.user-info a:hover {
+color: #0056b3;
+}
+
+{% endblock %}
+
+{% block content %}
+<main>
+    <h1>Saved Posts</h1>
+    {% for saved_post in saved_posts %}
+    <div class="post">
+        <!-- User Info Section -->
+        <div class="user-info">
+            {% if saved_post.post.user.profile_image %}
+            <img src="{{ saved_post.post.user.profile_image.url }}"
+                alt="Profile Image" class="profile-img">
+            {% else %}
+            <img src="{% static 'default_profile.png' %}" alt="Profile Image"
+                class="profile-img">
+            {% endif %}
+            <a href="{% url 'user_profile' saved_post.post.user.username %}">
+                {{saved_post.post.user.username|default:"Unknown User" }}</a>
+        </div>
+
+        <!-- Post Image -->
+        <img src="{{ saved_post.post.image.url }}" alt="Post Image">
+
+        <!-- Post Actions -->
+        <div class="post-actions">
+            <form method="post"
+                action="{% url 'like_post' saved_post.post.id %}"
+                id="like-form-{{ saved_post.post.id }}"
+                onsubmit="submitLike(event, {{ saved_post.post.id }})">
+                {% csrf_token %}
+                <button type="submit"><i
+                        class="fa fa-heart{% if saved_post.post.liked_by_user %} liked{% endif %}"
+                        id="like-icon-{{ saved_post.post.id }}"></i></button>
+            </form>
+            <span
+                id="like-count-{{ saved_post.post.id }}">{{
+                saved_post.post.like_count }}
+                likes</span>
+            <form method="post"
+                action="{% url 'save_post' saved_post.post.id %}"
+                id="save-form-{{ saved_post.post.id }}"
+                onsubmit="submitSave(event, {{ saved_post.post.id }})">
+                {% csrf_token %}
+                <button type="submit"><i class="fa fa-save saved"
+                        id="save-icon-{{ saved_post.post.id }}"></i></button>
+            </form>
+            <a href="#" onclick="openCommentModal({{ saved_post.post.id }})"><i
+                    class="fa fa-comment"></i></a>
+            <span id="comment-count-{{ saved_post.post.id }}">
+                {{saved_post.post.comment_set.count }} comments</span>
+        </div>
+
+        <!-- Caption -->
+        <p>{{ saved_post.post.caption|default:"No caption provided" }}</p>
+    </div>
+    {% endfor %}
+</main>
+
+<script>
+  // Include necessary JavaScript functions here, similar to home.html
+</script>
+{% endblock %}
